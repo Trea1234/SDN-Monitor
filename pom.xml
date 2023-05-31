@@ -5,7 +5,7 @@
 <modelVersion>4.0.0</modelVersion>
 
 <groupId>com.ruoyi</groupId>
-<artifactId>ruoyi</artifactId>
+<artifactId>SDN-Monitor</artifactId>
 <version>3.8.5</version>
 
 <name>ruoyi</name>
