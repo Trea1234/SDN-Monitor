@@ -181,6 +181,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>net-utils</module>
+        <module>net-traffic</module>
     </modules>
     <packaging>pom</packaging>
 
