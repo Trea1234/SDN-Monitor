@@ -19,11 +19,6 @@
         <java.version>8</java.version>
     </properties>
     <dependencies>
-        <!--SpringBoot Web-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
         <!--SpringBoot Test-->
         <dependency>

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Objects;
 

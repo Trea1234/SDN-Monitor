@@ -1,14 +1,10 @@
 package team.sdn.net.traffic.websocket.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
-import team.sdn.net.traffic.service.TrafficService;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
