@@ -58,6 +58,4 @@ public interface FlowTableUtils {
      * @return 是否成功删除
      */
     Boolean modifyFlowTable(Integer switchId,Integer tableId);
-
-
 }
