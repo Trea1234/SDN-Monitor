@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * 
  * @author ruoyi
  */
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+@SpringBootApplication(scanBasePackages = {"team.sdn.net.traffic"},exclude = { DataSourceAutoConfiguration.class })
 public class RuoYiApplication
 {
     public static void main(String[] args)
