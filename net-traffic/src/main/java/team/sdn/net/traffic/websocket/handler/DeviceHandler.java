@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import team.sdn.net.traffic.service.DeviceService;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +43,7 @@ public class DeviceHandler implements WebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         SESSION_POOL.put(session.getId(), session);
         int count = LINK_COUNT.incrementAndGet();
-        log.info("sessionID:" + session.getId() + "加入连接");
+        log.info("SessionID:" + session.getId() + "加入连接");
         log.info("已有" + count + "个连接");
         session.sendMessage(new TextMessage("Device服务端已将你加入连接"));
     }
@@ -50,28 +51,39 @@ public class DeviceHandler implements WebSocketHandler {
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         String method = (String) session.getAttributes().get("method");
-        System.out.println(method);
         Object[] params = JSONObject.parseObject(String.valueOf(message.getPayload())).values().toArray();
         Method serviceMethod = service.getClass().getMethod(method);
-        Object invoke = serviceMethod.invoke(service, params);
-        session.sendMessage(new TextMessage(JSONObject.toJSONString(new Object())));
+        Object result = serviceMethod.invoke(service, params);
+        sendMsg(session,new Object());
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-
+        log.info("SessionID:" + session.getId() + "发生异常(" + exception.toString() + ")");
+        SESSION_POOL.remove(session.getId());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         SESSION_POOL.remove(session.getId());
         LINK_COUNT.decrementAndGet();
-        log.info("sessionID:" + session.getId() + "退出连接");
+        log.info("SessionID:" + session.getId() + "退出连接");
     }
 
     @Override
     public boolean supportsPartialMessages() {
         return false;
+    }
+
+    /**
+     * 发送JSON消息给客户端
+     * @param session 与客户端的连接
+     * @param t 发送的消息
+     * @param <T> 泛型
+     * @throws IOException IO异常
+     */
+    public <T> void sendMsg(WebSocketSession session,T t) throws IOException {
+        session.sendMessage(new TextMessage(JSONObject.toJSONString(t)));
     }
 
 }
