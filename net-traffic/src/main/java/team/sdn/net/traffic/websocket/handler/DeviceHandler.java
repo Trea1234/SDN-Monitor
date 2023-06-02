@@ -1,9 +1,15 @@
 package team.sdn.net.traffic.websocket.handler;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.TypeReference;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
+import team.sdn.net.traffic.service.DeviceService;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,6 +32,12 @@ public class DeviceHandler implements WebSocketHandler {
      */
     private static final HashMap<String,WebSocketSession> SESSION_POOL = new HashMap<>();
 
+    /**
+     * 设备信息服务类
+     */
+    @Autowired
+    private DeviceService service;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         SESSION_POOL.put(session.getId(), session);
@@ -37,7 +49,12 @@ public class DeviceHandler implements WebSocketHandler {
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        System.out.println(message.getPayload());
+        String method = (String) session.getAttributes().get("method");
+        System.out.println(method);
+        Object[] params = JSONObject.parseObject(String.valueOf(message.getPayload())).values().toArray();
+        Method serviceMethod = service.getClass().getMethod(method);
+        Object invoke = serviceMethod.invoke(service, params);
+        session.sendMessage(new TextMessage(JSONObject.toJSONString(new Object())));
     }
 
     @Override
@@ -48,6 +65,7 @@ public class DeviceHandler implements WebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         SESSION_POOL.remove(session.getId());
+        LINK_COUNT.decrementAndGet();
         log.info("sessionID:" + session.getId() + "退出连接");
     }
 
@@ -55,4 +73,5 @@ public class DeviceHandler implements WebSocketHandler {
     public boolean supportsPartialMessages() {
         return false;
     }
+
 }
