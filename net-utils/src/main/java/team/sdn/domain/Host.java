@@ -1,12 +1,15 @@
 package team.sdn.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * 主机信息
  * @author Big-Bai
  **/
-@Data
+@Getter
+@ToString
 public class Host {
     /**
      * 节点id<br/>

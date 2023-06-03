@@ -34,7 +34,7 @@ public class TopologyUtils {
      * @param hostId 主机id
      * @return 主机信息
      */
-    public static Host getHostById(Integer hostId){
+    public static Host getHostById(String hostId){
         return null;
     }
 
@@ -52,7 +52,7 @@ public class TopologyUtils {
      * @param switchId 交换机的id
      * @return 交换机信息
      */
-    public static Switch getSwitchById(Integer switchId){
+    public static Switch getSwitchById(String switchId){
         return null;
     }
 
