@@ -1,21 +1,18 @@
-import * as echarts from "echarts";
-export default class Rose {
+import Charts from "../index.js";
+export default class Rose extends Charts {
     /**
      * 构造函数
      * @param {String} title 标题
      * @param {String} containerId 容器ID
      */
     constructor(title, containerId) {
-        this.title = title;
-        this.container = document.getElementById(containerId);
+        super(title, containerId);
     }
 
     /**
      * 初始化
      */
     init() {
-        let myChart = echarts.init(this.container);
-
         let option = {
             title: {
                 text: this.title
@@ -55,6 +52,6 @@ export default class Rose {
                 }
             ]
         }
-        option && myChart.setOption(option);
+        super().init(option);
     }
 }
