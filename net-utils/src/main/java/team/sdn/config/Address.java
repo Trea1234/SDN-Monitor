@@ -17,7 +17,7 @@ public class Address {
      */
     public static String[] QUERY_FLOW_TABLE_GET_NODE = {"/restconf/operational/opendaylight-inventory:nodes/node/","/flow-node-inventory:table/","/flow/"};
 
-    public static String TOPOLOGY;
+    public static String TOPOLOGY = "/restconf/operational/network-topology:network-topology";
     public static String NODE_INFO;
 
 
