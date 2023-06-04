@@ -14,10 +14,6 @@ public class Switch{
      * 交换机节点id
      */
     private String nodeId;
-    /**
-     * 交换机节点名称
-     */
-    private String nodeName;
 
     /**
      * 端口们
