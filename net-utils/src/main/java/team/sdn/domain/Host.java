@@ -1,6 +1,7 @@
 package team.sdn.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -8,9 +9,8 @@ import lombok.ToString;
  * 主机信息
  * @author Big-Bai
  **/
-@Getter
-@ToString
-public class Host {
+@Data
+public class Host{
     /**
      * 节点id<br/>
      * 格式 host:xx:xx:xx:xx:xx:xx
@@ -29,12 +29,12 @@ public class Host {
     private String ip;
 
     /**
-     *
+     *初次记录的时间
      */
     private String firstSeen;
 
     /**
-     *
+     *最后一次记录的时间
      */
     private String lastSeen;
 }
