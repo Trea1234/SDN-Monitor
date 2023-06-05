@@ -17,21 +17,21 @@ public interface DeviceService {
      * 获取网络拓扑图
      * @return 拓扑图
      */
-    Topology getTopology();
+    String getTopology();
 
     /**
      * 获取主机信息
      * @param hostId 主机ID
      * @return 主机信息
      */
-    List<Host> getHost(Integer hostId);
+    List<Host> getHost(String hostId);
 
     /**
      * 获取交换机信息
      * @param switchId 交换机ID
      * @return 交换机信息
      */
-    List<Switch> getSwitch(Integer switchId);
+    List<Switch> getSwitch(String switchId);
 
 
 }

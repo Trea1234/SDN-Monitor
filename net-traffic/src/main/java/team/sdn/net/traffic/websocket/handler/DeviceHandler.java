@@ -1,7 +1,5 @@
 package team.sdn.net.traffic.websocket.handler;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.TypeReference;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +50,23 @@ public class DeviceHandler implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         String method = (String) session.getAttributes().get("method");
         Object[] params = JSONObject.parseObject(String.valueOf(message.getPayload())).values().toArray();
-        Method serviceMethod = service.getClass().getMethod(method);
+        Class[] classes = new Class[params.length];
+        for (int i = 0; i < params.length; i++) {
+            classes[i] = String.class;
+        }
+        Method serviceMethod = service.getClass().getDeclaredMethod(method,classes);
+        for (int i = 0;i<params.length;i++) {
+            if ("".equals(params[i])) {
+                params[i] = null;
+            }
+        }
         Object result = serviceMethod.invoke(service, params);
-        sendMsg(session,new Object());
+        sendMsg(session,result);
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        log.info("SessionID:" + session.getId() + "发生异常(" + exception.toString() + ")");
+        log.error("SessionID:" + session.getId() + "发生异常(" + exception.toString() + ")");
         SESSION_POOL.remove(session.getId());
     }
 

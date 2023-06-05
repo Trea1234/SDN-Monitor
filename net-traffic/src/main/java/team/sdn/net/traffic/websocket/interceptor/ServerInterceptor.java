@@ -29,7 +29,7 @@ public class ServerInterceptor extends HttpSessionHandshakeInterceptor {
                 attributes.put("method",method);
                 return super.beforeHandshake(serverHttpRequest, response, wsHandler, attributes);
             }
-
+            return false;
         }
         return super.beforeHandshake(request, response, wsHandler, attributes);
     }

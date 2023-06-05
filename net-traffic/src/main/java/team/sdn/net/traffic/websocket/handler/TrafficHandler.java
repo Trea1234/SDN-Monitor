@@ -32,8 +32,8 @@ public class TrafficHandler implements WebSocketHandler {
     /**
      * 网络流量服务类
      */
-    /*@Autowired
-    private TrafficService service;*/
+    @Autowired
+    private TrafficService service;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -46,20 +46,28 @@ public class TrafficHandler implements WebSocketHandler {
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-
+        log.error("SessionID:" + session.getId() + "发生异常(" + exception.toString() + ")");
+        SESSION_POOL.remove(session.getId());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-
+        SESSION_POOL.remove(session.getId());
+        LINK_COUNT.decrementAndGet();
+        log.info("SessionID:" + session.getId() + "退出连接");
     }
 
     @Override
     public boolean supportsPartialMessages() {
         return false;
+    }
+
+    private void memoryThread(Object result) {
+
     }
 }

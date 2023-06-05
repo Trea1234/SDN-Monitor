@@ -1,5 +1,8 @@
 package team.sdn.net.traffic.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import team.sdn.net.traffic.mapper.TrafficMapper;
+
 /**
  * @author TokisakiKurumi
  * @className TrafficServiceImpl
@@ -7,4 +10,8 @@ package team.sdn.net.traffic.service.impl;
  * @description
  **/
 public class TrafficServiceImpl {
+
+    @Autowired
+    private TrafficMapper mapper;
+
 }
