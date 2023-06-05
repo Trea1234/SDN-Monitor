@@ -1,5 +1,7 @@
 package team.sdn.sdnutils;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import team.sdn.config.Address;
@@ -23,7 +25,11 @@ public class TopologyUtils {
      * 获取网络拓扑
      * @return 拓扑类
      */
-    public static Topology getTopology(){
+    public static String getTopology(){
+        return  HttpSender.get(Address.ODL_ADDRESS+Address.TOPOLOGY);
+    }
+    @Deprecated
+    public static Topology getTopologyDeprecated(){
         Document document = XMLUtil.getDocument(HttpSender.get(Address.ODL_ADDRESS+Address.TOPOLOGY));
         Topology topology = new Topology();
         List<Host> hosts = new ArrayList<>();
