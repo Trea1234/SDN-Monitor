@@ -1,9 +1,16 @@
 package team.sdn.sdnutils;
 
+import org.dom4j.Document;
+import org.dom4j.Element;
+import team.sdn.config.Address;
 import team.sdn.domain.Host;
+import team.sdn.domain.Link;
 import team.sdn.domain.Switch;
 import team.sdn.domain.Topology;
+import team.sdn.util.HttpSender;
+import team.sdn.util.XMLUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +24,47 @@ public class TopologyUtils {
      * @return 拓扑类
      */
     public static Topology getTopology(){
-        return null;
+        Document document = XMLUtil.getDocument(HttpSender.get(Address.ODL_ADDRESS+Address.TOPOLOGY));
+        Topology topology = new Topology();
+        List<Host> hosts = new ArrayList<>();
+        List<Switch> switches = new ArrayList<>();
+        List<Link> links = new ArrayList<>();
+        Element root = document.getRootElement();
+
+        List<Element> elements = XMLUtil.getElementsByPath(root,"network-topology","topology","node");
+        List<Element> hostElements = new ArrayList<>();
+        for(Element e:elements){
+            String name = XMLUtil.getTextByElementStringPath(e,"node","node-id");
+            if(name.contains(":")){
+                Host host = new Host();
+                host.setIp(XMLUtil.getTextByElementStringPath(e,"node","addresses","ip"));
+                host.setMac(XMLUtil.getTextByElementStringPath(e,"node","addresses","mac"));
+                host.setNodeId(XMLUtil.getTextByElementStringPath(e,"node","node-id"));
+                host.setFirstSeen(XMLUtil.getTextByElementStringPath(e,"node","addresses","first-seen"));
+                host.setLastSeen(XMLUtil.getTextByElementStringPath(e,"node","addresses","last-seen"));
+                hosts.add(host);
+            }else {
+                Switch sw = new Switch();
+                sw.setNodeId(XMLUtil.getTextByElementStringPath(e,"node","node-id"));
+                sw.setTerminations(new ArrayList<>());
+                List<Element> terminations = XMLUtil.getElementsByPath(e,"node","termination-point");
+                for(Element ee:terminations){
+                    sw.getTerminations().add(XMLUtil.getTextByElementStringPath(ee,"termination-point","tp-id"));
+                }
+                switches.add(sw);
+            }
+        }
+        List<Element> linkElements = XMLUtil.getElementsByPath(root,"network-topology","topology","link");
+        for(Element e:linkElements) {
+            Link link = new Link();
+            link.setPoint1(XMLUtil.getTextByElementStringPath(e,"link","source","source-node"));
+            link.setPoint1Tp(XMLUtil.getTextByElementStringPath(e,"link","source","source-tp"));
+            link.setPoint2(XMLUtil.getTextByElementStringPath(e,"link","destination","dest-node"));
+            link.setPoint2Tp(XMLUtil.getTextByElementStringPath(e,"link","destination","dest-tp"));
+            links.add(link);
+        }
+        topology.setTopologyId(XMLUtil.getTextByElementStringPath(root,"network-topology", "topology", "topology-id"));
+        return topology;
     }
 
     //主机
